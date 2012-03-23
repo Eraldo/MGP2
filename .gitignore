@@ -4,6 +4,13 @@
 .project
 .pydevproject
 
+# Ignore compiled python files.
+*.pyc
+*.pyo
+
+# Ignore temporary files.
+*.tmp*
+
 # Ignore any file named foo.txt.
 # foo.txt
 
