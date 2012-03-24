@@ -1,0 +1,50 @@
+'''
+Created on Mar 23, 2012
+
+@author: eraldo
+'''
+import Pyro4
+
+items = Pyro4.Proxy("PYRONAME:items")       # use name server object lookup uri shortcut
+
+## testing
+#print("\nTesting: test")
+#print(items.test())
+#print("\nTesting: add")
+#print(items.add("task 5"))
+#print("\nTesting: get")
+#print(items.get())
+#print("\nTesting: show")
+#print(items.show())
+
+def show_menu():
+    options = ["menu", "show items", "add item", "delete item", "save items", "load items", "exit"]
+    print("--- MENU ---")
+    for i, v in enumerate(options):
+        print(i+1, ": ", v)
+
+show_menu()
+while True:
+    choice = input("\nChose an action: ")
+    if choice == "1" or choice.find("menu") != -1:
+        show_menu()
+    elif choice == "2" or choice.find("show") != -1: 
+        for i, v in enumerate(items.get()):
+            print(i+1, ": ", v)
+    elif choice == "3" or choice.find("add") != -1:
+        item = input("title for item to add: ")
+        items.add(item)
+    elif choice == "4" or choice.find("delete") != -1:
+        try:
+            index = int(input("index of item to delete: "))
+            items.delete(index-1)
+        except ValueError:
+            pass        
+    elif choice == "5" or choice.find("save") != -1:
+        print(items.save())
+    elif choice == "6" or choice.find("load") != -1:
+        print(items.load())
+    elif choice == "7" or choice.find("exit") != -1:
+        break
+    else:
+        print("Invalid Option!")
