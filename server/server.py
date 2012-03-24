@@ -1,7 +1,7 @@
 '''
 Created on Mar 23, 2012
 
-@author: eraldo
+@author: Eraldo Helal
 '''
 
 import Pyro4, pickle
