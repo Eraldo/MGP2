@@ -30,13 +30,21 @@ def main():
                 print(i+1, ": ", v)
         elif choice == "3" or choice.find("add") != -1:
             item = input("title for item to add: ")
-            items.add(item)
+            msg = items.add(item)
+            print(msg)
         elif choice == "4" or choice.find("delete") != -1:
+            item = input("index or full name of item to delete: ")
+            index = None
             try:
-                index = int(input("index of item to delete: "))
-                items.delete(index-1)
+                index = int(item)-1
             except ValueError:
-                pass        
+                try:
+                    index = items.get().index(item)
+                except ValueError:
+                    msg = "No such item found. (enter index or full title)"
+            if index:
+                msg = items.delete(index)
+            print(msg)
         elif choice == "5" or choice.find("save") != -1:
             print(items.save())
         elif choice == "6" or choice.find("load") != -1:
