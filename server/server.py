@@ -39,9 +39,9 @@ class items():
         @param index:
         '''
         if index >= 0 and index < self.items.__len__():
-            self.items.pop(index)
-            msg = "deleted: {0}".format(index)
-            print(msg)
+            item = self.items.pop(index)
+            msg = "deleted: #{0}: {1}".format(index+1, item)
+            print("deleted: #{0}: {1}".format(index, item))
         else:
             msg = "Invalid item number."
         return msg
