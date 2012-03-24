@@ -11,6 +11,9 @@
 # Ignore temporary files.
 *.tmp*
 
+# Ignore items pickle file
+items
+
 # Ignore any file named foo.txt.
 # foo.txt
 
