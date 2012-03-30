@@ -3,9 +3,14 @@ Created on Mar 23, 2012
 
 @author: Eraldo Helal
 '''
-import Pyro4
 
-items = Pyro4.Proxy("PYRONAME:items")       # use name server object lookup uri shortcut
+items = object
+
+
+def get_items():
+    import Pyro4
+    return Pyro4.Proxy("PYRONAME:items")       # use name server object lookup uri shortcut
+
 
 def show_menu():
     '''
@@ -16,11 +21,21 @@ def show_menu():
     for i, v in enumerate(options):
         print(i+1, ": ", v)
 
+
 def main():
     '''
     Start client command line interface to server object. 
     '''
+    import sys
+    
+    try:
+        items = get_items()
+    except:
+        print("Unexpected error:", sys.exc_info()[0])
+        sys.exit()
+    
     show_menu()
+    
     while True:
         choice = input("\nChose an action: ")
         if choice == "1" or choice.find("menu") != -1:
@@ -35,6 +50,7 @@ def main():
         elif choice == "4" or choice.find("delete") != -1:
             item = input("index or full name of item to delete: ")
             index = None
+            msg = ""
             try:
                 index = int(item)-1
             except ValueError:
@@ -42,7 +58,7 @@ def main():
                     index = items.get().index(item)
                 except ValueError:
                     msg = "No such item found. (enter index or full title)"
-            if index:
+            if index is not None:
                 msg = items.delete(index)
             print(msg)
         elif choice == "5" or choice.find("save") != -1:
@@ -53,6 +69,7 @@ def main():
             break
         else:
             print("Invalid Option!")
+
 
 def test_client():
     '''
@@ -66,6 +83,7 @@ def test_client():
     print(items.get())
     print("\nTesting: show")
     print(items.show())
+
 
 if __name__ == "__main__":
     main()
