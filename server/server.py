@@ -13,8 +13,8 @@ class items():
     '''
     items = ['task 1', 'task 2', 'task 3']
     filename = "items"
-
-
+    
+    
     def show(self):
         '''
         Output list of items on server.
@@ -22,14 +22,14 @@ class items():
         for i, v in enumerate(self.items):
             print(i, ": ", v)
         #print(*self.items, sep='\n')
-
-
+    
+    
     def get(self):
         '''
         Returns the list of items from server.
         '''
         return self.items
-
+    
     
     def add(self, item):
         '''
@@ -54,7 +54,7 @@ class items():
         else:
             msg = "Invalid item number."
         return msg
-
+    
     
     def save(self):
         '''
@@ -79,8 +79,8 @@ class items():
             msg = "Nothing to load."
         print(msg)
         return msg
-
-
+    
+    
 def start_name_server():
     '''
     Start name server in shell.
