@@ -6,21 +6,41 @@ Created on Mar 23, 2012
 
 items = object
 
+class Menu:
+    
+    def __init__(self, items=[]):
+        for item in items:
+            self.add(item)
+    
+    def add(self, item):
+        self.menu_items.append(item)
+    
+    def display(self):
+        for item in self.menu_items:
+            print(item)
 
-def get_items():
+class MenuItem:
+    
+    def __init__(self, name="---", help_text="No help provided.", aliases=[]):
+        self.name = name
+        self.help_text = help_text
+        for alias in aliases:
+            self.aliases.append(alias)
+
+def get_items_from_server():
     import Pyro4
-    return Pyro4.Proxy("PYRONAME:items")       # use name server object lookup uri shortcut
-
+    # use name server object lookup uri shortcut
+    return Pyro4.Proxy("PYRONAME:items")
 
 def show_menu():
     '''
     Display a menu with choices for user.
     '''
-    options = ["menu", "show items", "add item", "delete item", "save items", "load items", "exit"]
+    options = ["menu", "show items", "add item", "delete item", "save items", 
+               "load items", "exit"]
     print("--- MENU ---")
     for i, v in enumerate(options):
         print(i+1, ": ", v)
-
 
 def main():
     '''
@@ -29,7 +49,7 @@ def main():
     import sys
     
     try:
-        items = get_items()
+        items = get_items_from_server()
     except:
         print("Unexpected error:", sys.exc_info()[0])
         sys.exit()
@@ -70,7 +90,6 @@ def main():
         else:
             print("Invalid Option!")
 
-
 def test_client():
     '''
     Testing automated user input.
@@ -83,7 +102,6 @@ def test_client():
     print(items.get())
     print("\nTesting: show")
     print(items.show())
-
 
 if __name__ == "__main__":
     main()
