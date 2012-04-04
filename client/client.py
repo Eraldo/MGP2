@@ -15,30 +15,58 @@ class App:
         # use name server object lookup uri shortcut
         self.items = Pyro4.Proxy("PYRONAME:items")
         
-    def exit_action(self):
+    def exit_action(self, param):
         print("Program has ended.")
         sys.exit()
     
-    def menu_action(self):
+    def menu_action(self, param):
         if self.menu:
             self.menu.display()
     
-    def list_action(self):
+    def list_action(self, param):
         items = self.items.get()
         if items.__len__() == 0:
             print("The list is empty.")
         else:
-            for i, v in enumerate(items):
-                print(i+1, ": ", v)
+            if param and param != "all": # assuming specific item
+                item = param
+                index = None
+                try:
+                    index = int(item)-1
+                except ValueError:
+                    try:
+                        index = items.index(item)
+                    except ValueError:
+                        print("No such item found. (enter index or full title)")
+                if index is not None:
+                    if  index in range(0,items.__len__()):
+                        print(index+1, ": ", items[index])
+                    else:
+                        print("No item found for index:", index+1)
+            else: # show all items
+                for i, v in enumerate(items):
+                    print(i+1, ": ", v)
 
     
-    def add_action(self):
-        item = input("title for item to add: ")
+    def add_action(self, param):
+        if param:
+            item = param
+        else:
+            item = input("title for item to add: ").strip()
         msg = self.items.add(item)
         print(msg)
     
-    def delete_action(self):
-        item = input("index or full name of item to delete: ")
+    def delete_action(self, param):
+        if param:
+            if param == "all":
+                number_of_items = self.items.__len__() 
+                for _ in range(number_of_items):
+                    self.items.delete(0)
+                print("Deleted all", number_of_items, "items.")
+                return
+            item = param
+        else:
+            item = input("index or full name of item to delete: ")
         index = None
         msg = ""
         
@@ -53,35 +81,37 @@ class App:
             msg = self.items.delete(index)
         print(msg)
     
-    def save_action(self):
+    def save_action(self, param):
         msg = self.items.save()
         print(msg)
     
-    def load_action(self):
+    def load_action(self, param):
         msg = self.items.load()
         print(msg)
     
-    def help_action(self):
-        self.menu.display_help()
+    def help_action(self, param):
+        self.menu.display_help(param)
     
     def init_menu(self):
         self.menu = Menu()
         
-        menu_items = [["exit", "Terminate program.", 
+        menu_items = [["exit", "Terminate program. 'exit|<alias>'", 
                        self.exit_action, ["0", "quit"]], 
-                      ["menu", "Display the main menu.", 
+                      ["menu", "Display the main menu. 'menu|<alias>'", 
                        self.menu_action, ["1", "m"]], 
-                      ["list", "Display the list of items", 
+                      ["list", "Display the list of items. 'list|<alias>'", 
                        self.list_action, ["2", "ls"]], 
-                      ["add", "Add an item to the list.", 
+                      ["add", "Add an item to the list. 'add|<alias> [item]'", 
                        self.add_action, ["3", "a"]], 
-                      ["delete", "Delete an item from the list.", 
+                      ["delete", 
+                       "Delete an item from the list. 'delete|<alias> [item|all]'", 
                        self.delete_action, ["4", "d", "del"]], 
-                      ["save", "Save the list.", 
+                      ["save", "Save the list. 'save|<alias>'", 
                        self.save_action, ["5", "sa"]], 
-                      ["load", "Load the list.", 
+                      ["load", "Load the list. 'load|<alias>'", 
                        self.load_action, ["6", "lo"]], 
-                      ["help", "Show help information.", 
+                      ["help", 
+                       "Show help information. 'help|<alias> [topic|all]", 
                        self.help_action, ["7", "h"]], 
                       ]
         
@@ -104,10 +134,10 @@ class App:
                 if (choice == item.name) or (choice in item.aliases):
                     found = True
                     print(item.name, item.aliases, choice, "-->", param)
-                    item.action()
+                    item.action(param)
             if not found:
                 print("Invalid menu option!")
-                self.menu.display_help()
+                self.menu.display_help("all")
 
 
 class Menu:
@@ -125,11 +155,18 @@ class Menu:
         for index, item in enumerate(self.menu_items):
             print(index, ":", item.name)
     
-    def display_help(self):
+    def display_help(self, topic):
 #        self.display()
         print("--- MENU HELP ---")
-        for item in self.menu_items:
-            print(item.name, ":", item.help_text, "-", "aliases:", item.aliases)
+        if topic and topic != "all":
+            for item in self.menu_items:
+                if topic == item.name or topic in item.aliases:
+                    print(item.name, ":", item.help_text, "-", 
+                          "aliases:", item.aliases)
+        else:
+            for item in self.menu_items:
+                print(item.name, ":", item.help_text, "-", 
+                      "aliases:", item.aliases)
 
 
 class MenuItem:
