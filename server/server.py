@@ -7,13 +7,12 @@ Created on Mar 23, 2012
 import Pyro4, pickle
 
 
-class items():    
+class Items():    
     '''
     Representing a collection of items.
     '''
     items = ['task 1', 'task 2', 'task 3']
     filename = "items"
-    
     
     def show(self):
         '''
@@ -23,13 +22,11 @@ class items():
             print(i, ": ", v)
         #print(*self.items, sep='\n')
     
-    
     def get(self):
         '''
         Returns the list of items from server.
         '''
         return self.items
-    
     
     def add(self, item):
         '''
@@ -40,7 +37,6 @@ class items():
         msg = "added: {0}".format(item)
         print(msg)
         return msg
-    
     
     def delete(self, index):
         '''
@@ -55,7 +51,6 @@ class items():
             msg = "Invalid item number."
         return msg
     
-    
     def save(self):
         '''
         Save the items collection into a pickled file on server.
@@ -65,7 +60,6 @@ class items():
         msg = "saved items to: '{0}'".format(self.filename)
         print(msg)
         return msg
-    
     
     def load(self):
         '''
@@ -79,15 +73,14 @@ class items():
             msg = "Nothing to load."
         print(msg)
         return msg
-    
-    
+
+
 def start_name_server():
     '''
     Start name server in shell.
     '''
     from subprocess import call
     call(["/usr/local/bin/python3", "-m", "Pyro4.naming"])
-
 
 def start_server(obj, name):
     print("Starting server..")
@@ -98,18 +91,16 @@ def start_server(obj, name):
     print("..server started.")
     daemon.requestLoop()            # start the event loop of the server to wait for calls
 
-
 def main():
     '''
     Setup server and wait for calls.
     (also creates dummy items)
     '''
     # create a new items list instance
-    items_obj = items()
+    items_obj = Items()
     items_obj.show()
 #    start_name_server()
     start_server(items_obj, "items")
-
 
 if __name__ == "__main__":
     main()
