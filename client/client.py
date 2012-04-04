@@ -159,10 +159,14 @@ class Menu:
 #        self.display()
         print("--- MENU HELP ---")
         if topic and topic != "all":
+            found = False
             for item in self.menu_items:
                 if topic == item.name or topic in item.aliases:
+                    found = True
                     print(item.name, ":", item.help_text, "-", 
                           "aliases:", item.aliases)
+            if not found:
+                print("Topic", topic, "not found.")
         else:
             for item in self.menu_items:
                 print(item.name, ":", item.help_text, "-", 
