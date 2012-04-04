@@ -28,6 +28,9 @@ class Items():
         '''
         return self.items
     
+    def __len__(self):
+        return len(self.items)
+    
     def add(self, item):
         '''
         Add a new item to the list of items on server.
