@@ -95,23 +95,25 @@ class App:
     def init_menu(self):
         self.menu = Menu()
         
-        menu_items = [["exit", "Terminate program. 'exit|<alias>'", 
+        menu_items = [["exit", "Terminate program.", "'exit|<alias>'", 
                        self.exit_action, ["0", "quit"]], 
-                      ["menu", "Display the main menu. 'menu|<alias>'", 
+                      ["menu", "Display the main menu.", "'menu|<alias>'", 
                        self.menu_action, ["1", "m"]], 
-                      ["list", "Display the list of items. 'list|<alias>'", 
+                      ["list", "Display the list of items.", "'list|<alias>'", 
                        self.list_action, ["2", "ls"]], 
-                      ["add", "Add an item to the list. 'add|<alias> [item]'", 
+                      ["add", "Add an item to the list.", 
+                       "'add|<alias> [item]'", 
                        self.add_action, ["3", "a"]], 
                       ["delete", 
-                       "Delete an item from the list. 'delete|<alias> [item|all]'", 
+                       "Delete an item from the list.", 
+                       "'delete|<alias> [item|all]'", 
                        self.delete_action, ["4", "d", "del"]], 
-                      ["save", "Save the list. 'save|<alias>'", 
+                      ["save", "Save the list.", "'save|<alias>'", 
                        self.save_action, ["5", "sa"]], 
-                      ["load", "Load the list. 'load|<alias>'", 
+                      ["load", "Load the list.", "'load|<alias>'", 
                        self.load_action, ["6", "lo"]], 
                       ["help", 
-                       "Show help information. 'help|<alias> [topic|all]", 
+                       "Show help information.", "'help|<alias> [topic|all]'", 
                        self.help_action, ["7", "h"]], 
                       ]
         
@@ -158,35 +160,39 @@ class Menu:
     def display_help(self, topic):
 #        self.display()
         print("--- MENU HELP ---")
-        if topic and topic != "all":
+        if topic:
             found = False
             for item in self.menu_items:
-                if topic == item.name or topic in item.aliases:
+                if topic in ["all", item.name] or (topic in item.aliases):
                     found = True
-                    print(item.name, ":", item.help_text, "-", 
-                          "aliases:", item.aliases)
+                    print(item.name, ":\t", item.help_text, 
+                          "\n\tsyntax:", item.syntax, 
+                          "\n\taliases:", item.aliases, sep='')
             if not found:
                 print("Topic", topic, "not found.")
         else:
             for item in self.menu_items:
-                print(item.name, ":", item.help_text, "-", 
-                      "aliases:", item.aliases)
+                print(item.name, ":\t", item.help_text, sep='')
+            print("For more information type: 'help <topic>|all'")
+                
 
 
 class MenuItem:
     
     name = ""
     help_text = ""
+    syntax = ""
     action = None
     aliases = []
     
     def default_action(self):
         pass
     
-    def __init__(self, name="---", help_text="No help provided.", action=None, 
-                 aliases=[]):
+    def __init__(self, name="---", help_text="No help provided.", syntax="", 
+                 action=None, aliases=[]):
         self.name = name
         self.help_text = help_text
+        self.syntax = syntax
         if action:
             self.action = action
         else:
@@ -198,66 +204,19 @@ def main():
     '''
     Start client command line interface to server object. 
     '''
+    
     client = App()
-
-    client.get_items_from_server()
-    client.start()
+        
+#    # debug run
+#    client.get_items_from_server()
+#    client.start()
     
-#    try:
-#        client.get_items_from_server()
-#        client.start()
-#    except:
-#        print("Unexpected error:", sys.exc_info()[0])
-#        sys.exit()
-    
-#    def init_menu():
-
-    
-
-
-#    while True:
-#        choice = input("\nChose an action: ")
-#        if choice == "1" or choice.find("menu") != -1:
-#            show_menu()
-#        elif choice == "2" or choice.find("show") != -1 or choice.find("list") != -1: 
-#            for i, v in enumerate(items.get()):
-#                print(i+1, ": ", v)
-#        elif choice == "3" or choice.find("add") != -1:
-#            item = input("title for item to add: ")
-#            msg = items.add(item)
-#            print(msg)
-#        elif choice == "4" or choice.find("delete") != -1:
-#            item = input("index or full name of item to delete: ")
-#            index = None
-#            msg = ""
-#            try:
-#                index = int(item)-1
-#            except ValueError:
-#                try:
-#                    index = items.get().index(item)
-#                except ValueError:
-#                    msg = "No such item found. (enter index or full title)"
-#            if index is not None:
-#                msg = items.delete(index)
-#            print(msg)
-#        elif choice == "5" or choice.find("save") != -1:
-#            print(items.save())
-#        elif choice == "6" or choice.find("load") != -1:
-#            print(items.load())
-#        elif choice == "7" or choice.find("exit") != -1:
-#            break
-#        else:
-#            print("Invalid Option!")
-
-#def show_menu():
-#    '''
-#    Display a menu with choices for user.
-#    '''
-#    options = ["menu", "show items", "add item", "delete item", "save items", 
-#               "load items", "exit"]
-#    print("--- MENU ---")
-#    for i, v in enumerate(options):
-#        print(i+1, ": ", v)
+    try:
+        client.get_items_from_server()
+        client.start()
+    except:
+        print("Unexpected error:", sys.exc_info()[0])
+        sys.exit()
 
 def test_client(self):
     '''
