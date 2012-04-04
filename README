@@ -1,2 +1,12 @@
-This is a prototype project.
+This is a prototype project of a networked task manager.
+This project is using Python 3.
+Dependency: Pyro (http://pyro.sourceforge.net)
+
+Instructions:
+First run "server.py". You should get as message telling you that the server
+was started.
+Then start "client.py" and follow the on-screen instructions.
+
+Have fun. :)
 For more information contact: eraldo@eraldo.org
+Please also report any bugs to the contact above. 
