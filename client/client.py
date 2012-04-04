@@ -113,7 +113,7 @@ class App:
                       ["load", "Load the list.", "'load|<alias>'", 
                        self.load_action, ["6", "lo"]], 
                       ["help", 
-                       "Show help information.", "'help|<alias> [topic|all]'", 
+                       "Show help information.", "'help|<alias> [<topic>|all]'", 
                        self.help_action, ["7", "h"]], 
                       ]
         
@@ -135,11 +135,11 @@ class App:
             for item in self.menu.menu_items:
                 if (choice == item.name) or (choice in item.aliases):
                     found = True
-                    print(item.name, item.aliases, choice, "-->", param)
+#                    print(item.name, item.aliases, choice, "-->", param)
                     item.action(param)
             if not found:
                 print("Invalid menu option!")
-                self.menu.display_help("all")
+                self.menu.display()
 
 
 class Menu:

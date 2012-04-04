@@ -89,7 +89,7 @@ def start_server(obj, name):
     print("Starting server..")
     daemon = Pyro4.Daemon()         # make a Pyro daemon
     ns = Pyro4.locateNS()           # find the name server
-    uri = daemon.register(obj)   # register the items list as a Pyro object
+    uri = daemon.register(obj)      # register the items list as a Pyro object
     ns.register(name, uri)          # register the object with a name in the name server
     print("..server started.")
     daemon.requestLoop()            # start the event loop of the server to wait for calls
